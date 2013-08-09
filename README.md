@@ -2,3 +2,5 @@ Staples JS
 =========
 
 Simple Fun JavaScript &amp; HTML Data Binding Templating
+
+<a href="example.html">Todos example</a>
