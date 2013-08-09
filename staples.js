@@ -12,40 +12,6 @@
  * @description
  * Wraps a raw DOM element or HTML string as a 
  *
- * Real  always takes precedence over , provided it was loaded before `DOMContentLoaded`
- * event fired.
- *
- * Staples is a tiny, API-compatible subset of MagnumJS that allows
- * MAG to manipulate the DOM. implements only the most commonly needed functionality
- * within a very small footprint, so only a subset of the API - methods, arguments and
- * invocation styles - are supported.
- *
- * Note: All element references in MAG are always are
- * raw DOM references.
- *
- * ## StaplesJS lite
- * StaplesJS lite version of jQuery provides only the following jQuery methods:
- *
- * - [addClass()]()
- * - 
- *
- * ## StaplesJS Extras
- * MAG also provides the following additional methods and events to both:
- *
- * ### Events
- * - `$destroy` - MAGJS intercepts all DOM destruction apis and fires this event
- *    
- * ### Methods
- * - `controller(name)` - retrieves the controller of the current element or its parent. By default
- *   retrieves controller associated with the `ngController` directive. If `name` is provided as
- *   camelCase directive name, then the controller for this directive will be retrieved (e.g.
- *   
- * - `scope()` - retrieves the {@link api/ng.$rootScope.Scope scope} of the current
- *   element or its parent.
-
- *
- * @param {string|DOMElement} element HTML string or DOMElement to be wrapped into.
- * @returns {Object} object.
  */
  
  
