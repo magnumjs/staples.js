@@ -2,16 +2,19 @@
 //StaplesJS
 //////////////////////////////////
 
-/**
- * @ngdoc function
- * @name mag.staple
- * @function
+/*!
+ * MagnumJS - StaplesJS Template Factory v0.11.1
+ * https://github.com/magnumjs
  *
- * @description
- * Wraps a raw DOM element or HTML string as a 
+ * Includes Sizzle.js
+ * https://github.com/magnumjs/staples.js
  *
+ * Copyright 2013 Michael GLazer 
+ * Released under the MIT license
+ * http://jquery.org/license
+ *
+ * Date: 2013-08-10T13:48Z
  */
- 
  
 'use strict';
 mag.control = function (name,options) {
