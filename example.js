@@ -1,3 +1,5 @@
+// Code goes here
+
 var todosControl = function ($scope) {
     $scope.test= 'Yo!';
     $scope.remaining = function () {
@@ -9,10 +11,7 @@ var todosControl = function ($scope) {
     }, {
         text: 'second',
         done: false
-    }, {
-        text: 'third',
-        done: false
     }];
 }
 
-mag.control([], 'todosControl', todosControl);
+mag.control('todosControl',['test',todosControl]);
