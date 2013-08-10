@@ -6,12 +6,12 @@
  * MagnumJS - StaplesJS Template Factory v0.11.1
  * https://github.com/magnumjs
  *
- * Includes Sizzle.js
+ * Includes Staples.js
  * https://github.com/magnumjs/staples.js
  *
  * Copyright 2013 Michael GLazer 
  * Released under the MIT license
- * http://jquery.org/license
+ * https://github.com/magnumjs/mag.js/blob/master/LICENSE
  *
  * Date: 2013-08-10T13:48Z
  */
