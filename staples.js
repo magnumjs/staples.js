@@ -15,24 +15,23 @@
  */
  
  
- var mag = {};
-mag.control = function (modelsArray, name, fun) {
-    this.controls = this.controls || {};
-    this.controls[name] = this.controls['name'] || {};
-    var $scope = this.controls[name];
-    args = modelsArray || [];
-    args.splice(0, 0, $scope);
-    fun.apply(this, args);
+
+mag.control = function (name,options) {
+  
+    name=mag.tape(name,options);
+    $scope = mag.getScope(name);
     mag.template(name, $scope);
+     $(document).trigger('mag-template-done',[name]);
 };
 mag.template = function (name, $scope) {
+    
     this.templates = this.templates || {};
     this.templates[name] = this.templates[name] || {};
     this.template = this.templates[name];
     var docFragRoot = document.getElementById(name);
 
     this.applyVar = function (frag, key, vars) {
-        var items = frag.getElementsByClassName(key);
+        var items = frag.getElementsByClassName(key)||[];
         var i = items.length;
         if (i < 1) {
             this.setVar(frag, key, vars);
@@ -85,7 +84,9 @@ mag.template = function (name, $scope) {
 
             }
         }
-    };
-    this.parse(docFragRoot, $scope);
-};
 
+    };
+
+    this.parse(docFragRoot, $scope);
+
+};
