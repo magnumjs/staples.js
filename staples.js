@@ -1,5 +1,3 @@
-'use strict';
-
 //////////////////////////////////
 //StaplesJS
 //////////////////////////////////
@@ -15,11 +13,11 @@
  */
  
  
-
+'use strict';
 mag.control = function (name,options) {
   
     name=mag.tape(name,options);
-    $scope = mag.getScope(name);
+   var $scope = mag.getScope(name);
     mag.template(name, $scope);
      $(document).trigger('mag-template-done',[name]);
 };
@@ -54,13 +52,13 @@ mag.template = function (name, $scope) {
         });
     };
     this.applyVars = function (frag, vars) {
-        for (key in vars) {
+        for (var key in vars) {
             this.applyVar(frag, key, vars);
         }
     };
     this.parse = function (docFragRoot, vars) {
 
-        for (key in vars) {
+        for (var key in vars) {
 
             if (Object.prototype.toString.call(vars[key]) === '[object Array]') {
 
