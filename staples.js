@@ -20,7 +20,8 @@
 mag.control = function (name,options) {
   
     name=mag.tape(name,options);
-   var $scope = mag.getScope(name);
+    var $scope = mag.getScope(name);
+
     mag.template(name, $scope);
      $(document).trigger('mag-template-done',[name]);
 };
@@ -28,17 +29,27 @@ mag.template = function (name, $scope) {
     
     this.templates = this.templates || {};
     this.templates[name] = this.templates[name] || {};
-    this.template = this.templates[name];
-    var docFragRoot = document.getElementById(name);
 
+   this.templates[name].precompiled = this.templates[name].precompiled||$('#'+name).html();
+  
+  mag.template.events(name,'change');
+  
     this.applyVar = function (frag, key, vars) {
-        var items = frag.getElementsByClassName(key)||[];
+        var items = $('.'+key,frag)||[];
         var i = items.length;
         if (i < 1) {
+           this.setShy(frag, key, vars);
             this.setVar(frag, key, vars);
+            this.getVar(frag, key, vars);
+            this.getShy(frag, key, vars);
+      
         }
         while (i--) {
+      
             this.setVar(frag, key, vars, items, i);
+              this.getVar(frag, key, vars, items, i);
+                //   this.getShy(frag, key, vars);
+        
         }
     };
     this.setVar = function (frag, key, vars, items, i) {
@@ -46,13 +57,64 @@ mag.template = function (name, $scope) {
         if (items) {
             items[i].innerText = val;
         }
-        frag.innerHTML = frag.innerHTML.replace(/\[\[(.*?)\]\]/g, function (out, inn, pos) {
+        var oldHtml=$(frag).html();
+        var newHtml= oldHtml.replace(/\[\[(.*?)\]\]/g, function (out, inn, pos) {
             if (key == inn) {
-                return val;
+                return '<!--mag:'+key+'-->'+val+'<!--//mag:'+key+'-->';
             } else {
                 return out;
             }
+            
         });
+        $(frag).html(newHtml);
+    };
+    this.getShy=function(frag,key,vars){
+      var dt=$(frag).data(key);
+    
+      if(dt!=undefined){
+          var val = (typeof vars[key] == 'function') ? vars[key].call(this) : vars[key];
+        var oldHtml=$(frag).html();
+        
+        var newHtml =oldHtml.replace(dt,val);
+    
+        $(frag).data(key,val);
+         $(frag).html(newHtml);
+    
+      }
+    };
+    this.setShy=function(frag,key,vars){
+          var val = (typeof vars[key] == 'function') ? vars[key].call(this) : vars[key];
+        
+      var p="\=\".*(\\[\\["+key+"\\]\\]).*\"";
+//var p="<[^>]+\=\".*(\\[\\["+key+"\\]\\]).*\"[^>]+>";
+  this.caches=this.caches||{};//cache regexps for performance
+  
+    var r=new RegExp(p,'gm');
+
+            var oldHtml=$(frag).html();
+        var newHtml= oldHtml.replace(r, function (out, inn, pos) {
+         
+      $(frag).data(key,val);
+            return out.replace(inn,val);
+        }); 
+          $(frag).html(newHtml);
+      
+    };
+    this.getVar=function(frag,key,vars){
+        var val = (typeof vars[key] == 'function') ? vars[key].call(this) : vars[key];
+        
+   var p="<!--mag:"+key+"-->([\\s\\S]*?)<!--\/\/mag:"+key+"-->";
+    this.caches=this.caches||{};//cache regexps for performance
+  
+    if(!this.caches[key]){this.caches[key]=new RegExp(p,'gm');}
+
+         var oldHtml=$(frag).html();
+        var newHtml= oldHtml.replace(this.caches[key], function (out, inn, pos) {
+      
+              return '<!--mag:'+key+'-->'+val+'<!--//mag:'+key+'-->';
+        
+        }); 
+          $(frag).html(newHtml);
     };
     this.applyVars = function (frag, vars) {
         for (var key in vars) {
@@ -65,20 +127,41 @@ mag.template = function (name, $scope) {
 
             if (Object.prototype.toString.call(vars[key]) === '[object Array]') {
 
-                var sdocFragRoot = docFragRoot.getElementsByClassName(key);
-                var newelement = sdocFragRoot[0].cloneNode(true);
+
+// only first call
+this.keys=this.keys||{};
+
+if(this.keys[key]){
+  var n = vars[key];
+  
+                for (var i = 0; i < n.length; i++) {
+
+                    var newest =$('.'+key, docFragRoot).filter(':eq('+i+')');
+
+                    var nvars = n[i];
+           
+                    this.applyVars(newest, n[i]);
+                   // sdocFragRoot.parent().append(newest);
+                }
+}else{
+
+                var sdocFragRoot = $('.'+key, docFragRoot).first();
+                 $('.'+key, docFragRoot).not(':first').remove();
+                var newelement = sdocFragRoot.clone(true);
 
                 var n = vars[key];
                 for (var i = 0; i < n.length; i++) {
 
-                    var newest = newelement.cloneNode(true);
+                    var newest = newelement.clone(true);
 
                     var nvars = n[i];
                     this.applyVars(newest, n[i]);
-                    sdocFragRoot[0].parentNode.appendChild(newest);
+                    sdocFragRoot.parent().append(newest);
                 }
 
-                docFragRoot.removeChild(sdocFragRoot[0]);
+               sdocFragRoot.remove( );
+}
+               this.keys[key]=this.keys[key]||{};
             } else {
 
                 this.applyVar(docFragRoot, key, vars);
@@ -87,7 +170,9 @@ mag.template = function (name, $scope) {
         }
 
     };
+    this.parse($('#'+name), $scope);
+};
 
-    this.parse(docFragRoot, $scope);
-
+mag.template.events=function(name,change){
+  
 };
