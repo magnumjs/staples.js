@@ -15,6 +15,7 @@
  *
  * Date: 2013-08-10T13:48Z
  */
+
 'use strict';
 mag.control = function (name, options) {
 
@@ -22,16 +23,16 @@ mag.control = function (name, options) {
     var $scope = mag.getScope(name);
     mag.observe().make(mag.template);
     mag.template(name, $scope);
-    $(document).trigger('mag-template-done', [name]);
+
 };
 mag.template = function (name, $scope) {
-
+    this.prefix = 'data-mag-';
     this.templates = this.templates || {};
     this.templates[name] = this.templates[name] || {};
 
     this.templates[name].precompiled = this.templates[name].precompiled || $('#' + name).html();
 
-    mag.template.events(name, 'change');
+    this.fire('tmpl-begin', [name]);
 
     this.applyVar = function (frag, key, vars) {
         var items = $('.' + key, frag) || [];
@@ -74,10 +75,8 @@ mag.template = function (name, $scope) {
         }
     };
     this.getShy = function (frag, key, vars) {
-        var dt = $(frag).attr(key);
-        if (this.test && key == 'done') {
-            console.log($('.todos').filter(':eq(0)').data());
-        }
+        var dt = $(frag).attr(this.prefix + key);
+
         if (dt != undefined) {
 
             var p = "\=\".*(" + dt + ").*\"";
@@ -92,7 +91,7 @@ mag.template = function (name, $scope) {
                     return out.replace(inn, val);
                 });
 
-                $(frag).attr(key, val);
+                $(frag).attr(this.prefix + key, val);
                 $(frag).html(newHtml);
 
             }
@@ -116,8 +115,9 @@ mag.template = function (name, $scope) {
                 return out.replace(inn, val);
             });
 
-            $(frag).attr(key, val);
-            console.log($('.todos').filter(':eq(0)').data());
+            $(frag).attr(this.prefix + key, val);
+
+
             $(frag).html(newHtml);
         }
     };
@@ -155,27 +155,19 @@ mag.template = function (name, $scope) {
 
                 // only first call
                 this.keys = this.keys || {};
-
+                var n = vars[key];
                 if (this.keys[key]) {
-                    var n = vars[key];
+
 
                     for (var i = 0; i < n.length; i++) {
 
                         var newest = $('.' + key, docFragRoot).filter(':eq(' + i + ')');
 
-                        var nvars = n[i];
-
                         this.applyVars(newest, n[i]);
-                        // sdocFragRoot.parent().append(newest);
                     }
                 } else {
 
                     var sdocFragRoot = $('.' + key, docFragRoot).first();
-                    // $('.'+key, docFragRoot).not(':first').remove();
-                    //var newelement = sdocFragRoot.clone(true);
-
-                    var n = vars[key];
-
 
                     for (var i = 0; i < n.length; i++) {
                         var newest = sdocFragRoot.clone(true);
@@ -184,16 +176,11 @@ mag.template = function (name, $scope) {
                     sdocFragRoot.remove();
                     for (var i = 0; i < n.length; i++) {
 
-                        //               var newest = newelement.clone(true);
-
-                        var nvars = n[i];
-                        //                 sdocFragRoot.parent().append(newest);
                         var frag = $('.' + key, docFragRoot).filter(':eq(' + i + ')');
                         this.applyVars(frag, n[i]);
 
                     }
 
-                    //   sdocFragRoot.remove( );
                 }
                 this.keys[key] = this.keys[key] || {};
             } else {
@@ -205,8 +192,5 @@ mag.template = function (name, $scope) {
 
     };
     this.parse($('#' + name), $scope);
-};
-
-mag.template.events = function (name, change) {
-
+    this.fire('tmpl-end', [name]);
 };
