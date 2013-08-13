@@ -7,17 +7,27 @@
 <script src="http://rawgithub.com/magnumjs/mag.js/master/mag.js"></script>
 <script src="staples.js"></script>
 </head>
-<body>
-  <div id="todosControl">
-    <span class="test"></span>
-    [[test]]
-     <li class="todos">
-       <input type="checkbox" value=""/>
-<span class="text [[done]]"></span>
-       [[remaining]]
-       <span class="remaining"></span>
-</li>
+ <body>
+    <h1>MagnumJS Todo!</h1>
     
+    
+      <div id="todosControl">
+
+<span>[[remaining]] of [[size]] remaining</span>
+      [ <a href="" ng-click="archive()">archive</a> ]
+<ul class="unstyled">
+     <li class="todos">
+       <input type="checkbox" name="done" value="completed"/>
+<span class="task-[[done]]">[[text]]</span>
+</li>
+    </ul>
+    
+    <form id="addTodo">
+        <input type="text" id="todoText"  size="30"
+               placeholder="add new todo here">
+        <input class="btn-primary" id="addBtn" type="submit" value="add">
+      </form>
+      <span class="output"></span>
   </div>
 <script src="example.js"></script>
 </body>
