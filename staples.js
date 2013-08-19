@@ -3,36 +3,45 @@
 //////////////////////////////////
 
 /*!
- * MagnumJS - StaplesJS Template Factory v0.11.1
+ * MagnumJS - StaplesJS Template Factory v0.2
  * https://github.com/magnumjs
  *
  * Includes Staples.js
  * https://github.com/magnumjs/staples.js
  *
- * Copyright 2013 Michael GLazer 
+ * Copyright (c) 2013 Michael GLazer 
  * Released under the MIT license
  * https://github.com/magnumjs/mag.js/blob/master/LICENSE
  *
- * Date: 2013-08-10T13:48Z
+ * Date: 2013-08-19T13:48Z
  */
 
+;
 'use strict';
-mag.control = function (name, options) {
+(function ($, namespace, undefined) {
 
-    name = mag.tape(name, options);
-    var $scope = mag.getScope(name);
-    mag.observe().make(mag.template);
-    mag.template(name, $scope);
+    mag.template = {};
+
+})(jQuery, window.mag = window.mag || {});
+
+mag.template.serve = function (f) {
+
+    mag.aspect.next(f);
+    var name = f.arguments[0];
+    var scope = this.getScope();
+    var that = this;
+    mag.template.parse(that, name, scope);
 
 };
-mag.template = function (name, $scope) {
+mag.template.parse = function (that, name, $scope) {
     this.prefix = 'data-mag-';
     this.templates = this.templates || {};
     this.templates[name] = this.templates[name] || {};
 
     this.templates[name].precompiled = this.templates[name].precompiled || $('#' + name).html();
 
-    this.fire('tmpl-begin', [name]);
+    that.fire('tmpl-begin', [name]);
+    $('#' + name).hide();
 
     this.applyVar = function (frag, key, vars) {
         var items = $('.' + key, frag) || [];
@@ -192,5 +201,9 @@ mag.template = function (name, $scope) {
 
     };
     this.parse($('#' + name), $scope);
-    this.fire('tmpl-end', [name]);
+    that.fire('tmpl-end', [name]);
+    $('#' + name).show();
 };
+
+
+mag.aspect.add('around', 'control', mag.template.serve);
