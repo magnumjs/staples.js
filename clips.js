@@ -1,6 +1,23 @@
-
 // http://jsbin.com/ozebIvu/2/edit
+//////////////////////////////////
+//ClipsJS
+//////////////////////////////////
 
+/**!
+ * MagnumJS - ClipsJS Template Factory v0.1
+ * https://github.com/magnumjs
+ *
+ * @description Fast simple Html template to javascript function cache
+ * Includes Staples.js
+ * https://github.com/magnumjs/staples.js/clips.js
+ *
+ * Copyright (c) 2013 Michael GLazer 
+ * Released under the MIT license
+ * https://github.com/magnumjs/mag.js/blob/master/LICENSE
+ *
+ * Date: 2013-08-19T13:48Z
+ */
+ 
 $(function(){
  
   var template={};
