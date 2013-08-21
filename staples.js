@@ -28,7 +28,7 @@ mag.template.serve = function (f) {
 
     mag.aspect.next(f);
     var name = f.arguments[0];
-    var scope = this.getScope();
+    var scope = this.getScope(name);
     var that = this;
     mag.template.parse(that, name, scope);
 
