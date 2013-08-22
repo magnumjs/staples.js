@@ -71,20 +71,18 @@
             var newobj = sdata;
             for (var k in sdata) {
                 // array, string, function 
-                // if(typeof data[k]=='object'){
+
                 if (Object.prototype.toString.call(sdata[k]) === '[object Array]') { // array
 
                     var newk = k.substring(0, k.length - 1);
 
-                    //console.log(k);
                     for (var i in sdata[k]) {
                         var loopval = sdata[k][i];
-                        //console.log(loopval);
+
                         newobj['index'] = i;
                         newobj[newk] = loopval;
-                        // console.log(newobj);
+
                         ret += this.fun(newobj);
-                        // console.log(ret);
 
                     }
                     delete sdata[newk];
@@ -93,7 +91,6 @@
 
                 }
             }
-            //  delete newobj;
             return ret;
         }
 
