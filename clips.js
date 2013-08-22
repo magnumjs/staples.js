@@ -2,7 +2,6 @@
 //////////////////////////////////
 //ClipsJS
 //////////////////////////////////
-
 /**!
  * MagnumJS - ClipsJS Template Factory v0.1
  * https://github.com/magnumjs
@@ -11,14 +10,12 @@
  * Includes Staples.js
  * https://github.com/magnumjs/staples.js/clips.js
  *
- * Copyright (c) 2013 Michael GLazer 
+ * Copyright (c) 2013 Michael GLazer
  * Released under the MIT license
  * https://github.com/magnumjs/mag.js/blob/master/LICENSE
  *
  * Date: 2013-08-19T13:48Z
  */
- 
- 
 'use strict';
 (function ($, namespace, undefined) {
 
@@ -51,11 +48,14 @@
 
             this.fun = fun;
 
+
             ret = this.loop(data);
 
             if (ret == '') {
 
                 ret = this.fun(data);
+                ret = this.finder(ret, data);
+
 
             }
 
@@ -64,6 +64,19 @@
             $id.html(ret);
             $id.show();
 
+        }
+
+        this.finder = function (out, data) {
+
+            for (var k in data) {
+                var p = 'class\=\"' + k + '\"\>';
+
+                var patt = new RegExp(p, 'gm');
+
+                out = out.replace(patt, p + data[k]);
+
+            }
+            return out;
         }
 
         this.loop = function (sdata) {
@@ -82,7 +95,9 @@
                         newobj['index'] = i;
                         newobj[newk] = loopval;
 
-                        ret += this.fun(newobj);
+                        var out = this.fun(newobj);
+
+                        ret += this.finder(out, data);
 
                     }
                     delete sdata[newk];
@@ -117,27 +132,27 @@
 
     };
 
- /**
-  * @name Working example below
-  * 
-  * @description
-  * /
- 
-    var data = {
-        test: 'Yo!',
-        users: [{
-            name: 'm'
-        }, {
-            name: 'g'
-        }],
-        isOld: function () {
-            return true;
-        },
-        other: {
-            more: 'hmm'
-        }
-    };
+    /**
+     * @name Working example below
+     *
+     * @description
+     */
 
-    mag.clips.parse('map', data);
+    // var data = {
+    //     test: 'Yo!',
+    //     users: [{
+    //         name: 'm'
+    //     }, {
+    //         name: 'g'
+    //     }],
+    //     isOld: function () {
+    //         return true;
+    //     },
+    //     other: {
+    //         more: 'hmm'
+    //     }
+    // };
+
+    // mag.clips.parse('map', data);
 
 })(jQuery);
