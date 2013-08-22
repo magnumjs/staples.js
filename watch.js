@@ -30,33 +30,33 @@ Object.defineProperty(Object.prototype, "__watch", {
     }
 });
 
-;'use strict';
+;
+'use strict';
 (function ($, namespace, undefined) {
 
-    mag.broadcast={};
-  
+    mag.broadcast = {};
+
 })(jQuery, window.mag = window.mag || {});
 
-mag.broadcast.serve=function(name){
+mag.broadcast.serve = function (name) {
 
-  this.on('tmpl-begin',function(name){
-  });
-  this.on('tmpl-end',function(name){
+    this.on('tmpl-begin', function (name) {});
+    this.on('tmpl-end', function (name) {
 
-    var $scope = this.getScope(name);
+        var $scope = this.getScope(name);
 
-   var ctrl = new mag.broadcast.watch(this);
+        this.controls[name] = new mag.broadcast.watch(this);
 
 
-    for(k in $scope){
+        for (k in $scope) {
 
-      ctrl[k] = $scope[k];
-      ctrl._bind($('#'+k), k);
-      ctrl._watch($('.'+k), k);
-      
-    }
-    
-  });
+            this.controls[name][k] = $scope[k];
+            this.controls[name]._bind($('#' + k), k);
+            this.controls[name]._watch($('.' + k), k);
+
+        }
+
+    });
 
 };
 
@@ -68,7 +68,6 @@ mag.broadcast.watch = function (rootScope) {
         //this[propertyName] = $(DOMelement).val();
         var _ctrl = this;
         $(DOMelement).on("change input click propertyChange", function (e) {
-            // e.preventDefault();
             _ctrl[propertyName] = DOMelement.val();
             return true;
         });
@@ -79,10 +78,10 @@ mag.broadcast.watch = function (rootScope) {
     this._watch = function (DOMelement, propertyName) {
         //__watch triggers when the property changes
         this.__watch(propertyName, function (property, value) {
-          rootScope.fire('propertyChanged',[property,value]);
+            rootScope.fire('propertyChanged', [property, value]);
             $(DOMelement).text(value);
         });
     };
 };
 
-mag.aspect.add('after','control',mag.broadcast.serve);
+mag.aspect.add('after', 'control', mag.broadcast.serve);
