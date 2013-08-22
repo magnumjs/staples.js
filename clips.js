@@ -18,30 +18,76 @@
  * Date: 2013-08-19T13:48Z
  */
  
-$(function(){
+(function($){
  
   var template={};
   
   template.parse=function(id,data){
   
-    var cache = {};
+    this.cache = this.cache||{};
     
     this.run=function(id,data){
        
-    $id=$('#'+id);
+          $id=$('#'+id);
     $id.hide();
-    ret=this.tmpl($id.html(), data);
-    ret2=this.tmpl($id.html());
-   console.log(ret2);   
+      
+      if(this.cache[id]){
+
+        html=this.cache[id]['phtml'];
+        fun=this.cache[id]['fun'];
+      } else {
+        html=$id.html();
+         fun=this.tmpl(html);
+        this.cache[id]={};
+       this.cache[id]['fun']= fun;
+        this.cache[id]['ohtml']=html;
+      }
+
+      this.fun=fun;
+      
+      ret=this.loop(data);
+     
+      if(ret==''){
+
+       ret=this.fun(data);
+
+      }
+
+      
+      this.cache[id]['phtml']=ret;
     $id.html(ret);
     $id.show();
 
     }
     
-    this.loop=function(data){
-      for(var k in data){
+    this.loop=function(sdata){
+      var ret='';
+      var newobj=sdata;
+      for(var k in sdata){
        // array, string, function 
+       // if(typeof data[k]=='object'){
+        if( Object.prototype.toString.call( sdata[k] ) === '[object Array]' ) {  // array
+          
+          var newk =k.substring(0, k.length - 1);
+          
+          //console.log(k);
+          for(var i in sdata[k]){
+           var loopval= sdata[k][i];
+           //console.log(loopval);
+            newobj['index']=i;
+            newobj[newk]=loopval; 
+           // console.log(newobj);
+           ret+=this.fun(newobj);
+           // console.log(ret);
+            
+          }
+          delete sdata[newk]; delete sdata['index'];
+        } else {
+          
+        }
       }
+      delete newobj;
+      return ret;
     }
  
   this.tmpl = function(str,/* optional to execute against or just returns a fun str */ data){
@@ -63,7 +109,9 @@ $(function(){
   
  return data ? fn( data ) : fn;
   };
-   this.run(id,data);
+
+    this.run(id,data);
+
 };
   
   var data={
@@ -74,7 +122,7 @@ $(function(){
     more:'hmm' 
   }
   };
-  
+
 template.parse('map', data);
- 
-});
+
+})(jQuery);
